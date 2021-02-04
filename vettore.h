@@ -30,6 +30,7 @@ class Vettore{
             private:
                 Vettore<T>* const punt; 
                 u_int index;
+                
             public:
                 // iteratore CONSTUCTOR
                 Iteratore(Vettore<T>* v, u_int ind=0);
@@ -53,7 +54,7 @@ class Vettore{
         // vettore CONSTUCTOR
         Vettore();
         Vettore(u_int n, T& t);
-        Vettore(Iteratore& i); //forse non ci serve
+        Vettore( typename Vettore<T>::Iteratore first, typename  Vettore<T>::Iteratore second );
         Vettore(Vettore& vec);
         
         // Vettore OPERATOR overloading

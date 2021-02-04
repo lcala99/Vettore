@@ -58,14 +58,7 @@ Vettore<T>::Iteratore& begin() const{
 template <class T>
 void add(Iteratore& t);
 
-template <class T>
-Vettore<T>::T& remove(Iteratore& t){
-    Vettore<T>::Iteratore it = begin();
-    while(it != t) it++;
-    Vettore<T>::Iteratore aux=it+1;
-    size--; //perchè tolgo un valore
-    return it; //ritorno quello che ho tolto
-}
+
 */
 
 //              CONSTRUCTOR ITERATORE
@@ -147,20 +140,37 @@ bool Vettore<T>::Iteratore::operator==(const Iteratore& it) const{
 
 
 //      METODI VETTORE
+// CONSTRUCTOR Vettore
 template <class T>
 Vettore<T>::Vettore(){
 
 }
 
+// CONSTRUCTOR Vettore
 template <class T>
 Vettore<T>::Vettore(u_int n, T& t){
 
 }
 
+// CONSTRUCTOR Vettore
+// --------------------------------> RICONTROLLARE <-------------------------------
 template <class T>
-Vettore<T>::Vettore(Iteratore& i){ //forse non ci serve
+Vettore<T>::Vettore( typename Vettore<T>::Iteratore first, typename  Vettore<T>::Iteratore second) { //non passati per riferimento costante perchè dobiamo fare ++ allinterno della funzione
+    
+    if(first && second){
+        if( first == second ) push_back(first->info);
+        else{
+            while(first != second){
+                push_back(first->info);
+                first++;
+            }
+        }
+    }
+    
+    
 }
 
+// CONSTRUCTOR Vettore
 template <class T>
 Vettore<T>::Vettore(Vettore& vec){
 
@@ -168,14 +178,17 @@ Vettore<T>::Vettore(Vettore& vec){
 
 template <class T>
 Vettore<T>::Iteratore& Vettore<T>::begin() const{
+    return new Iteratore(this*);
 
 }
 
 template <class T>
 Vettore<T>::Iteratore& Vettore<T>::end()const{
-
+    return new Iteratore(this*, size);
 }
 
+
+// Vettore METHOD
 template <class T>
 u_int Vettore<T>::size() const{
     return size;
@@ -191,11 +204,7 @@ void Vettore<T>::insert(Iteratore& it, T& val){
 
 }
 
-template <class T>
-T& Vettore<T>::remove(Iteratore& it){
-    info=info+(it.index);
-   //da fare eprchè non so scalare i valori indietro di uno
-}
+
 
 template <class T>
 T& Vettore<T>::remove(T& value){
@@ -204,7 +213,7 @@ T& Vettore<T>::remove(T& value){
 
 template <class T>
 T& Vettore<T>::pop_back(){
-    if(past)
+    
     T* ret = info + (size-1);
     size--; //perchè tolgo un valore
     delete info + (size-1);
@@ -215,7 +224,7 @@ T& Vettore<T>::pop_back(){
 
 template <class T>
 bool Vettore<T>::empty(){ //true se il vettore è vuoto
-    if(size=0) return true;
+    if( size == 0 ) return true;
 }
 
 template <class T>
@@ -236,4 +245,15 @@ bool Vettore<T>::operator==(Vettore& vec){
         if( cont->info != vec->info ) control = false;
     }
     return control;
+}
+
+template <class T>
+T& Vettore<T>::remove(Iteratore& iter){
+    Vettore<T>::Iteratore it = begin();
+    Vettore<T> aux();
+    while(it != iter) it++;
+    
+    Vettore<T>::Iteratore aux=it++;
+    size--; //perchè tolgo un valore
+    return it->info; //ritorno quello che ho tolto
 }
