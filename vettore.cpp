@@ -68,7 +68,7 @@ Vettore<T>::T& remove(Iteratore& t){
 }
 */
 
-//              METODI ITERATORE
+//              CONSTRUCTOR ITERATORE
 template <class T>
 Vettore<T>::Iteratore::Iteratore(Vettore<T>* v, u_int ind=0): punt(v), index(ind){}
 
@@ -84,39 +84,61 @@ Vettore<T>::Iteratore::Iteratore (const Iteratore& it): punt(it.punt), index(it.
 
 
 //overloading operatori
+
+// operator iteratore
 template <class T>
 typename Vettore<T>::Iteratore& Vettore<T>::Iteratore::operator++(){
-    if(punt) index++;
+      if(punt!= nullptr) {
+        if(!past_the_end) {
+            if(index++ != punt->getSize()) index++;
+            else {index++ ; past_the_end = true;}
+        }
+      }
+      return *this;
 }
 
+// operator iteratore
 template <class T>
 typename Vettore<T>::Iteratore& Vettore<T>::Iteratore::operator--(){
-    if(punt) index--;
+      if(punt!= nullptr) {
+        if(!past_the_end) {
+            if(index-- != 0) index--;
+            else index=(*punt).getSize();
+        }
+        else{
+            index--;
+            past_the_end=false;
+        }
+      }
+      return *this;
 }
 
-/*          BOH IN STI TRE MI DA ERRORE su operator nella firma*/
+// operator iteratore
 
 template <class T>
 T& Vettore<T>::Iteratore::operator*() const{
-    return punt->info;
+    return (punt*)[index];
 }
 
+// operator iteratore
 template <class T>
 T& Vettore<T>::Iteratore::operator->() const {
-    return punt*;
+    return past_the_end ? new T() : (punt*)[index];
 }
 
+// operator iteratore
 template <class T>
 T& Vettore<T>::Iteratore::operator[](u_int ind) const {
-    return (punt*)[ind]->info;
+    return (punt*)[ind];
 }
 
-
+// operator iteratore
 template <class T>
 bool Vettore<T>::Iteratore::operator!=(const Iteratore& it) const{
     return this!=it;
 }
 
+// operator iteratore
 template <class T>
 bool Vettore<T>::Iteratore::operator==(const Iteratore& it) const{
     return this==it;
@@ -124,7 +146,7 @@ bool Vettore<T>::Iteratore::operator==(const Iteratore& it) const{
 
 
 
-//              METODI VETTORE
+//      METODI VETTORE
 template <class T>
 Vettore<T>::Vettore(){
 
