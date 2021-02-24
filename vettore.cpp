@@ -69,7 +69,7 @@ Vettore<T>::Iteratore::Iteratore(Vettore<T>* v, u_int ind=0): punt(v), index(ind
 //Iteratore(T* p, u_int s, u_int c);
 
 template <class T>
-Vettore<T>::Iteratore Vettore<T>::Iteratore::clone(){
+Vettore<T>::Iteratore Vettore<T>::Iteratore::clone()const{
     return new Vettore<T>::Iteratore(this);
 }
 
@@ -205,7 +205,7 @@ void Vettore<T>::push_back(const T& val){
             info = new T[capacity*2];
             capacity *= 2;
             info = aux;
-            info[size]=T;
+            info[size]=val;
             size++;
         }else{
             info + size = val; 

@@ -1,5 +1,6 @@
 #include "vettore.h"
 
+//g++ -std=c++11 main.cpp
 int main(int argc, char *argv[])
 {   
     double c = 8;
