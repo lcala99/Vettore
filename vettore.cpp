@@ -196,7 +196,18 @@ u_int Vettore<T>::size() const{
 
 template <class T>
 void Vettore<T>::push_back(T& val){
-
+    if(size == capacity){
+        T* aux  = info;
+        delete info;
+        info = new T[capacity*2];
+        capacity *= 2;
+        info = aux;
+        info[size]=T;
+        size++;
+    }else{
+        info + size = val; 
+        size++;
+    }
 }
 
 template <class T>
@@ -216,7 +227,7 @@ T& Vettore<T>::pop_back(){
     
     T* ret = info + (size-1);
     size--; //perchè tolgo un valore
-    delete info + (size-1);
+    delete info + (size);
 
     return ret;
 

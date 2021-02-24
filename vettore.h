@@ -15,12 +15,14 @@ class Iteratore;
 template<class T>
 class Vettore{
     // Vettore FRIEND DECLARATION 
+    template<class T>
     friend std::ostream& operator<<(std::ostream& os,const Vettore<T>& vec);
+   
     friend class Iteratore;
 
     private:
         T* info;
-        u_int size;
+        u_int Size;
         u_int capacity;
 
     public:
