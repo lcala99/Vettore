@@ -1,5 +1,6 @@
 #include "vettore.h"
 #include <math.h>
+#include <iostream>
 typedef unsigned int u_int;
 
 /*
@@ -68,8 +69,8 @@ Vettore<T>::Iteratore::Iteratore(Vettore<T>* v, u_int ind=0): punt(v), index(ind
 //Iteratore(T* p, u_int s, u_int c);
 
 template <class T>
-Vettore<T>::Iteratore Vettore<T>::Iteratore::clone(const Iteratore& it){
-
+Vettore<T>::Iteratore Vettore<T>::Iteratore::clone(){
+    return new Vettore<T>::Iteratore(this);
 }
 
 template <class T>
@@ -83,7 +84,7 @@ template <class T>
 typename Vettore<T>::Iteratore& Vettore<T>::Iteratore::operator++(){
       if(punt!= nullptr) {
         if(!past_the_end) {
-            if(index++ != punt->getSize()) index++;
+            if(index++ != punt->Size()) index++;
             else {index++ ; past_the_end = true;}
         }
       }
@@ -96,7 +97,7 @@ typename Vettore<T>::Iteratore& Vettore<T>::Iteratore::operator--(){
       if(punt!= nullptr) {
         if(!past_the_end) {
             if(index-- != 0) index--;
-            else index=(*punt).getSize();
+            else index=(*punt).Size();
         }
         else{
             index--;
@@ -140,17 +141,7 @@ bool Vettore<T>::Iteratore::operator==(const Iteratore& it) const{
 
 
 //      METODI VETTORE
-// CONSTRUCTOR Vettore
-template <class T>
-Vettore<T>::Vettore(){
 
-}
-
-// CONSTRUCTOR Vettore
-template <class T>
-Vettore<T>::Vettore(u_int n, T& t){
-
-}
 
 // CONSTRUCTOR Vettore
 // --------------------------------> RICONTROLLARE <-------------------------------
@@ -177,6 +168,17 @@ Vettore<T>::Vettore(Vettore& vec){
 }
 
 template <class T>
+Vettore<T>::Vettore():info(nullptr),size(0), capacity(0){}
+
+template <class T>
+Vettore<T>::Vettore(T& t):Vettore(1,&t) {}
+
+template <class T>
+Vettore<T>::Vettore(u_int n, T& t):Vettore(){
+    for(int i = 1; i < n; i++)push_back(&t);
+}
+
+template <class T>
 Vettore<T>::Iteratore& Vettore<T>::begin() const{
     return new Iteratore(this*);
 
@@ -190,24 +192,31 @@ Vettore<T>::Iteratore& Vettore<T>::end()const{
 
 // Vettore METHOD
 template <class T>
-u_int Vettore<T>::size() const{
+u_int Vettore<T>::Size() const{
     return size;
 }
 
 template <class T>
-void Vettore<T>::push_back(T& val){
-    if(size == capacity){
-        T* aux  = info;
-        delete info;
-        info = new T[capacity*2];
-        capacity *= 2;
-        info = aux;
-        info[size]=T;
-        size++;
+void Vettore<T>::push_back(const T& val){
+    if(info){
+        if(size == capacity){
+            T* aux  = info;
+            delete info;
+            info = new T[capacity*2];
+            capacity *= 2;
+            info = aux;
+            info[size]=T;
+            size++;
+        }else{
+            info + size = val; 
+            size++;
+        }
     }else{
-        info + size = val; 
+        info = new T(val);
         size++;
+        capacity++;
     }
+    
 }
 
 template <class T>
@@ -250,7 +259,7 @@ typename Vettore<T>::Vettore& merge(Vettore<T>& vec){
 
 template <class T>
 bool Vettore<T>::operator==(Vettore& vec){
-    if(size != vec.getSize())return false;
+    if(size != vec.Size())return false;
     bool control = true;
     for( auto cont = begin(); cont != end() && control; cont++ ){
         if( cont->info != vec->info ) control = false;
@@ -268,3 +277,6 @@ T& Vettore<T>::remove(Iteratore& iter){
     size--; //perchè tolgo un valore
     return it->info; //ritorno quello che ho tolto
 }
+
+template <class T>
+std::ostream& operator<<(std::ostream& os,const Vettore<T>& vec);
