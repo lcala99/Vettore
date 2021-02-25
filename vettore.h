@@ -7,16 +7,16 @@ typedef unsigned int u_int;
 
 template <class T> class Vettore;
 
+/*
 template <class T>
-std::ostream& operator<<(std::ostream& os,const Vettore<T>& vec);
+std::ostream& operator<<(std::ostream& os,const Vettore<T>& vec);*/
 
 class Iteratore;
 
 template<class T>
 class Vettore{
     // Vettore FRIEND DECLARATION 
-    //template<class T>
-    friend std::ostream& operator<< <T>(std::ostream& os,const Vettore<T>& vec);
+    //friend typename std::ostream& operator<<(std::ostream& os,const Vettore<T>& vec);
    
     friend class Iteratore;
 
@@ -78,8 +78,9 @@ class Vettore{
         
 };
 
+/*
 template <class T>
 std::ostream& operator<<(std::ostream& os,const Vettore<T>& vec);
-
+*/
 
 #endif 
