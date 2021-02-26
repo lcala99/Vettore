@@ -177,10 +177,10 @@ template <class T> //ok
 Vettore<T>::Vettore():info(nullptr), size(0), capacity(0){}
 
 template <class T> //ok
-Vettore<T>::Vettore(T& t): info(new T(t)), size(1){}
+Vettore<T>::Vettore(T t): info(new T(t)), size(1){}
 
 template <class T> //ok
-Vettore<T>::Vettore(u_int n, T& t): info(new T[n]){
+Vettore<T>::Vettore(u_int n, T t): info(new T[n]){
     for(int i=1; i<n; i++){
         push_back(t);
     }
@@ -211,7 +211,7 @@ u_int Vettore<T>::Size() const{
 }
 
 template <class T> //ok
-void Vettore<T>::push_back(const T& val){
+void Vettore<T>::push_back(const T val){
     if(info){ //l'array non è vuoto
         if(size == capacity){ //l'array è pieno
             T* aux  = new T[capacity*2]; //raddoppio capacity
