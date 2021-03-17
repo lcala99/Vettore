@@ -1,13 +1,11 @@
 #include "vettore.h"
 #include <iostream>
+using namespace std;
 
 //g++ -std=c++11 main.cpp
 int main(int argc, char *argv[])
 {   
-    double c = 8.2;
-    Vettore<double> v(8.2);
-    //v.push_back(c);
-    
-    //Vettore<int> v1(2,c);
-    return 0;
+    int a[4] = {0,1,2,3};
+    Vettore<int> v(4,a);
+    cout << v[0];
 }

@@ -168,7 +168,7 @@ Vettore<T>::Iteratore::Iteratore (const Iteratore& it): punt(it.punt), index(it.
 template <class T>
 typename Vettore<T>::Iteratore& Vettore<T>::Iteratore::operator++(){
       if(punt != nullptr) {
-        if(idex < punt.Size()) {
+        if(index < punt.Size()) {
             if(index++ != punt->Size()) index++;
             else {index++; }
         }
@@ -392,6 +392,11 @@ T& Vettore<T>::remove(Iteratore& iter){
         }
         
     }
+}
+
+template <class T>
+T& Vettore<T>::operator[](u_int ind) const {
+    return (*info)[ind];
 }
 
 template <class T>
