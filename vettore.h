@@ -30,12 +30,12 @@ class Vettore{
         class Iteratore{
             friend class Vettore<T>;
             private:
-                Vettore<T>* punt;
+                const Vettore<T>* punt;
                 u_int index;
 
             public:
                 // iteratore CONSTUCTOR
-                Iteratore(const Vettore<T>* v=nullptr, u_int ind=0);
+                Iteratore(const Vettore<T>& v, u_int ind=0);
                 // Iteratore(T* p, u_int s, u_int c);
                 Iteratore clone() const;
                 Iteratore(const Iteratore& it);
@@ -46,8 +46,8 @@ class Vettore{
                 // overloading OPERATOR
                 Iteratore& operator++();
                 Iteratore& operator--();
-                Iteratore& operator+(u_int ind)const;
-                Iteratore& operator-(u_int ind)const;
+                Iteratore operator+(u_int const ind) const;
+                Iteratore operator-(u_int const ind) const;
                 T& operator*() const;
                 T& operator->()const;
                 T& operator[](u_int ind)const;
@@ -68,11 +68,11 @@ class Vettore{
         bool operator==(Vettore& vec);
 
         // Vettore METHOD
-        Iteratore& begin() const;
-        Iteratore& end() const;
+        Iteratore begin() const;
+        Iteratore end() const;
         u_int Size() const;
         void push_back(const T val);
-        void insert(Iteratore& it, T& val);
+        void insert(Iteratore it, T val);
         void insert(T& val);
         void remove(Iteratore& it); //rimuove l'elemento in posizione it
         void remove(T& value); //rimuove elemento con valore value
@@ -151,21 +151,17 @@ void add(Iteratore& t);
 
 //              CONSTRUCTOR ITERATORE
 template <class T>
-Vettore<T>::Iteratore::Iteratore(const Vettore<T>* v , u_int ind){
-    cout << "ciao! ";
-    punt = new Vettore(*v);
-    cout << "ciao!! ";
+Vettore<T>::Iteratore::Iteratore(const Vettore<T>& v , u_int ind){
+    punt = &v;
     index = ind;
-    cout << "ciao!!! ";
+    cout << "costruito con index = " << index << endl;
 }
 
 template <class T>
 Vettore<T>::Iteratore::Iteratore(u_int ind){
-    cout << "ciao! ";
     punt = nullptr;
-    cout << "ciao!! ";
     index = ind;
-    cout << "ciao!!! ";
+    cout << "creato iteratore con indice: " << index << endl;
 }
 
 //Iteratore(T* p, u_int s, u_int c);
@@ -225,18 +221,20 @@ T& Vettore<T>::Iteratore::operator[](u_int ind) const {
 }
 
 template <class T>
-typename Vettore<T>::Iteratore& Vettore<T>::Iteratore::operator+(u_int ind) const{
-    Vettore<T>::Iteratore* aux = new Vettore<T>::Iteratore(*this);
-    aux->index = (aux->index+ind) >= punt->Size() ? punt->Size() : aux->index+ind;
-    return *aux;
+typename Vettore<T>::Iteratore Vettore<T>::Iteratore::operator+(u_int const ind) const{
+    int index = index+ind > punt->Size() ? punt->Size() : index+ind;
+    return Iteratore(index);
 }
 
 template <class T>
-typename Vettore<T>::Iteratore& Vettore<T>::Iteratore::operator-(u_int ind) const{
-    Vettore<T>::Iteratore* aux = new Vettore<T>::Iteratore(*this);
-    aux->index = (aux->index-ind) <= 0 ? 0 : aux->index-ind;
-    return *aux;
-}
+typename Vettore<T>::Iteratore Vettore<T>::Iteratore::operator-(u_int const ind) const{
+    cout << "index = " << index << endl;
+    int aux = 0;
+    aux = index-ind > 0 ? index-ind : 0;
+    cout << "aux = " << aux << endl;
+    cout << "index = " << index << endl;
+    return Iteratore(aux);
+} 
 
 // operator iteratore
 template <class T>
@@ -305,13 +303,13 @@ Vettore<T>::Vettore(u_int n, T* t): info(new T[n]), size(n){
 }
 
 template <class T>
-typename Vettore<T>::Iteratore& Vettore<T>::begin() const{
-    return *(new Iteratore(this));
+typename Vettore<T>::Iteratore Vettore<T>::begin() const{
+    return Iteratore(*this);
 }
 
 template <class T>
-typename Vettore<T>::Iteratore& Vettore<T>::end() const{
-    return*(new Iteratore(this, size));
+typename Vettore<T>::Iteratore Vettore<T>::end() const{
+    return Iteratore(*this, size);
 }
 
 
@@ -342,9 +340,14 @@ void Vettore<T>::push_back(const T val){
 }
 
 template <class T>
-void Vettore<T>::insert(Iteratore& it, T& val){
-    if( end() == it ) return;
-    this[it.index]=val;
+void Vettore<T>::insert(Iteratore it, T val){
+    //if( end() == it ) return;
+    size++;
+    for(int i=size-1; i!=it.index; i--){
+        info[i]=info[i-1];
+    }
+    info[it.index]=val;
+    
 }
 
 template <class T>
