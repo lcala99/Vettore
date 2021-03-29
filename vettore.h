@@ -119,7 +119,7 @@ template <class T>
 typename Vettore<T>::Iteratore Vettore<T>::Iteratore::operator++(int){
       if(punt != nullptr) {
         if(index < punt->Size()) {
-            if(index++ != punt->Size()) index++;
+            if(index+1 != punt->Size()) index++;
         }
       }
       return *this;
