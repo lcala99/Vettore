@@ -5,16 +5,23 @@ using namespace std;
 //g++ -std=c++11 main.cpp
 int main(int argc, char *argv[])
 {   
-    int a[4] = {0,1,2,3};
-    Vettore<int> v(4,a);
-    cout << v.Size() << endl;
-    v.push_back(5);
-    v.push_back(8);
-    int b=44;
-    v.insert(b);
-    cout << v.Size() << endl;
-    cout << v << endl;
+    int a[7] = {0,1,2,3,4,5,6};
+    Vettore<int> v(7,a);
     int c=11;
-    v.insert(v.end()-3, c);
+    auto it=v.begin()+3;
+    auto it2(it);
+    if(it==it2) cout << "sono uguali " << endl;
+    else cout << "sono diversi " << endl;
     cout << v << endl;
+    *it=0;
+    it2++;
+    if(it==it2) cout << "sono uguali " << endl;
+    else cout << "sono diversi " << endl;
+    *it2=88;
+    cout << v << endl;
+    cout << "iteratore it al terzo elemento "<<*it << endl;
+    cout << "iteratore it2 al terzo elemento++ " << *it2 << endl;
+    
+    
+    
 }

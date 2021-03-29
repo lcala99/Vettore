@@ -1,4 +1,3 @@
-
 #include <iostream>
 #ifndef VETTORE_H
 #define VETTORE_H
@@ -31,11 +30,11 @@ class Vettore{
             friend class Vettore<T>;
             private:
                 const Vettore<T>* punt;
-                u_int index;
+                int index;
 
             public:
                 // iteratore CONSTUCTOR
-                Iteratore(const Vettore<T>& v, u_int ind=0);
+                Iteratore(const Vettore<T>& v, int ind=0);
                 // Iteratore(T* p, u_int s, u_int c);
                 Iteratore clone() const;
                 Iteratore(const Iteratore& it);
@@ -44,13 +43,12 @@ class Vettore{
                 //                      quindi ci basta cancellare il puntatore e non ciò a cui punta
                 Iteratore(u_int ind);
                 // overloading OPERATOR
-                Iteratore& operator++();
-                Iteratore& operator--();
+                Iteratore operator++(int);
+                Iteratore operator--(int);
+                T& operator*() const;
+                T* operator->()const;
                 Iteratore operator+(u_int const ind) const;
                 Iteratore operator-(u_int const ind) const;
-                T& operator*() const;
-                T& operator->()const;
-                T& operator[](u_int ind)const;
                 bool operator!=(const Iteratore& it) const;
                 bool operator==(const Iteratore& it) const;
         };
@@ -60,7 +58,7 @@ class Vettore{
         Vettore(T t);
         Vettore(u_int n, T t);
         Vettore(u_int n, T* t);
-        Vettore( typename Vettore<T>::Iteratore first, typename  Vettore<T>::Iteratore second );
+        Vettore(typename Vettore<T>::Iteratore first, typename Vettore<T>::Iteratore second );
         Vettore(const Vettore& vec);
 
         // Vettore OPERATOR overloading
@@ -70,6 +68,7 @@ class Vettore{
         // Vettore METHOD
         Iteratore begin() const;
         Iteratore end() const;
+        T* getPtr() const;
         u_int Size() const;
         void push_back(const T val);
         void insert(Iteratore it, T val);
@@ -85,105 +84,42 @@ class Vettore{
 template <class T>
 std::ostream& operator<<(std::ostream& os,const Vettore<T>& vec);
 
-
-#endif
-
-
-
-/*
-template <class T>
-Vettore<T>::Iteratore::Iteratore(T* p, u_int s, u_int c): size(s), cap(c),past_the_end(false) {
-    T* arr = new T[c];
-    for(int i=0; i<size; i++){
-        arr[i]=p[i];
-    }
-    punt=arr;
-}
-
-template <class T>
-typename Vettore<T>::Iteratore Vettore<T>::Iteratore::clone(const Iteratore& it){
-    return new Iteratore(it.punt, it.size, it.cap);
-}
-
-template<class T>
-Vettore<T>::Iteratore::Iteratore(Iteratore& it,bool pte=false):past_the_end(pte){
-    this=clone(it);
-}
-template <class T>
-Vettore<T>::Iteratore::~Iteratore(){
-    delete punt;
-}
-
-template <class T>
-Vettore<T>::Vettore(): v_size(0),capacity(0) {
-    info = nullptr;
-}
-
-template <class T>
-Vettore<T>::Vettore(u_int n, T& t):
-    info( n == 0 ? nullptr : new T[n]), v_size(n), capacity(n){
-
-    for(int i = 0; i < v_size; i++)info[i]=t;
-}
-
-/*
- * template <class T>
- * Vettore<T>::Vettore(Iteratore& i);
-
-
-template <class T>
-u_int Vettore<T>::size()const{return v_size;}
-
-template <class T>
-typename Vettore<T>::Iteratore& Vettore<T>::end() const{return new typename Vettore<T>::Iteratore(info[v_size()], true);}
-
-template <class T>
-Vettore<T>::Iteratore& begin() const{
-    Vettore<T>::Iteratore it.punt = info;
-    return it;
-}
-
-template <class T>
-void add(Iteratore& t);
-
-
-*/
-
 //              CONSTRUCTOR ITERATORE
 template <class T>
-Vettore<T>::Iteratore::Iteratore(const Vettore<T>& v , u_int ind){
+Vettore<T>::Iteratore::Iteratore(const Vettore<T>& v , int ind){
     punt = &v;
-    index = ind;
-    cout << "costruito con index = " << index << endl;
+    if(ind < 0) index=0;
+    else if(ind>punt->Size()) index=punt->Size();
+    else index=ind;
 }
+
+template <class T>
+typename Vettore<T>::Iteratore Vettore<T>::Iteratore::clone()const{
+    return Vettore<T>::Iteratore(this);
+}
+
+template <class T>
+Vettore<T>::Iteratore::Iteratore(const Iteratore& it): 
+    punt(it.punt), index(it.index) {}
+
+/*  non ciserve un costruttore solo con l'indice perchè dovremo comuqnue 
+    sempre sepcificare anche il vettore al quale fa riferimento
 
 template <class T>
 Vettore<T>::Iteratore::Iteratore(u_int ind){
     punt = nullptr;
     index = ind;
     cout << "creato iteratore con indice: " << index << endl;
-}
+}*/
 
 //Iteratore(T* p, u_int s, u_int c);
 
+//overloading operatori iteratore
 template <class T>
-typename Vettore<T>::Iteratore Vettore<T>::Iteratore::clone()const{
-    return new Vettore<T>::Iteratore(this);
-}
-
-template <class T>
-Vettore<T>::Iteratore::Iteratore (const Iteratore& it): punt(it.punt), index(it.index) {}
-
-
-//overloading operatori
-
-// operator iteratore
-template <class T>
-typename Vettore<T>::Iteratore& Vettore<T>::Iteratore::operator++(){
+typename Vettore<T>::Iteratore Vettore<T>::Iteratore::operator++(int){
       if(punt != nullptr) {
-        if(index < punt.Size()) {
+        if(index < punt->Size()) {
             if(index++ != punt->Size()) index++;
-            else {index++; }
         }
       }
       return *this;
@@ -191,7 +127,7 @@ typename Vettore<T>::Iteratore& Vettore<T>::Iteratore::operator++(){
 
 // operator iteratore
 template <class T>
-typename Vettore<T>::Iteratore& Vettore<T>::Iteratore::operator--(){
+typename Vettore<T>::Iteratore Vettore<T>::Iteratore::operator--(int){
       if(punt != nullptr) {
              index--;
       }else{ 
@@ -210,42 +146,31 @@ T& Vettore<T>::Iteratore::operator*() const{
 // operator iteratore
 
 template <class T>
-T& Vettore<T>::Iteratore::operator->() const {
-    return index == punt->Size() ? new T() : (*punt)[index];
-}
-
-// operator iteratore
-template <class T>
-T& Vettore<T>::Iteratore::operator[](u_int ind) const {
-    return (*punt)[ind];
+T* Vettore<T>::Iteratore::operator->() const {
+    return punt;
 }
 
 template <class T>
 typename Vettore<T>::Iteratore Vettore<T>::Iteratore::operator+(u_int const ind) const{
-    int index = index+ind > punt->Size() ? punt->Size() : index+ind;
-    return Iteratore(index);
-}
+    //int aux = index+ind < punt->Size() ? index+ind : punt->Size();
+    return Iteratore(*punt, index+ind);
+} 
 
 template <class T>
 typename Vettore<T>::Iteratore Vettore<T>::Iteratore::operator-(u_int const ind) const{
-    cout << "index = " << index << endl;
-    int aux = 0;
-    aux = index-ind > 0 ? index-ind : 0;
-    cout << "aux = " << aux << endl;
-    cout << "index = " << index << endl;
-    return Iteratore(aux);
+    return Iteratore(*punt, index-ind);
 } 
 
 // operator iteratore
 template <class T>
 bool Vettore<T>::Iteratore::operator!=(const Iteratore& it) const{
-    return this!=it;
+    return punt != it.punt && index != it.index;
 }
 
 // operator iteratore
 template <class T>
 bool Vettore<T>::Iteratore::operator==(const Iteratore& it) const{
-    return *(this)==it || (punt == it.punt && index == it.index);
+    return punt == it.punt && index == it.index;
 }
 
 
@@ -255,38 +180,13 @@ bool Vettore<T>::Iteratore::operator==(const Iteratore& it) const{
 
 // CONSTRUCTOR Vettore
 // --------------------------------> RICONTROLLARE <-------------------------------
-template <class T>
-Vettore<T>::Vettore( typename Vettore<T>::Iteratore first, typename  Vettore<T>::Iteratore second) { //non passati per riferimento costante perchè dobiamo fare ++ allinterno della funzione
-
-    if(first && second){
-        if( first == second ) push_back(first->info);
-        else{
-            while(first != second){
-                push_back(first->info);
-                first++;
-            }
-        }
-    }
-
-
-}
-
-// CONSTRUCTOR Vettore
-//costruttore di copia
-template <class T> //ok
-Vettore<T>::Vettore(const Vettore& vec): size(vec.size){
-    delete[] info;
-    info = new T[size];
-    for(int i=0; i<size; i++){
-        info[i]=vec.info[i];
-    }
-}
 
 template <class T> //ok
 Vettore<T>::Vettore():info(nullptr), size(0), capacity(0){}
 
 template <class T> //ok
-Vettore<T>::Vettore(T t): info(new T(t)), size(1),capacity(1){}
+Vettore<T>::Vettore(T t): info(new T(t)), size(1),capacity(1){
+}
 
 template <class T> //ok
 Vettore<T>::Vettore(u_int n, T t): info(new T[n]){
@@ -303,8 +203,33 @@ Vettore<T>::Vettore(u_int n, T* t): info(new T[n]), size(n){
 }
 
 template <class T>
+Vettore<T>::Vettore( typename Vettore<T>::Iteratore first, typename  Vettore<T>::Iteratore second) { //non passati per riferimento costante perchè dobiamo fare ++ allinterno della funzione
+
+    if(first && second){
+        if( first == second ) push_back(first->info);
+        else{
+            while(first != second){
+                push_back(first->info);
+                first++;
+            }
+        }
+    }
+
+
+}
+
+template <class T> //ok
+Vettore<T>::Vettore(const Vettore& vec): size(vec.size){
+    //delete[] info;
+    info = new T[size];
+    for(int i=0; i<size; i++){
+        info[i]=vec.info[i];
+    }
+}
+
+template <class T>
 typename Vettore<T>::Iteratore Vettore<T>::begin() const{
-    return Iteratore(*this);
+    return Iteratore(*this,0);
 }
 
 template <class T>
@@ -316,6 +241,11 @@ typename Vettore<T>::Iteratore Vettore<T>::end() const{
 template <class T> //ok
 u_int Vettore<T>::Size() const{
     return size;
+}
+
+template <class T>
+T* Vettore<T>::getPtr() const{
+    return info;
 }
 
 template <class T> //ok
@@ -361,6 +291,7 @@ void Vettore<T>::insert(T& val){
     }
     if(ctr)push_back(val);
 }
+
 template <class T>
 void Vettore<T>::remove(T& value){
     for( int i = 0; i<Size(); i++){
@@ -433,3 +364,5 @@ std::ostream& operator<<(std::ostream& os,const Vettore<T>& vec){
     return os;
 }
 
+#endif
+ 
