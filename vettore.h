@@ -57,7 +57,7 @@ class Vettore{
         Vettore(T t);
         Vettore(u_int n, T t);
         Vettore(u_int n, T* t); //ok
-       //Vettore(typename Vettore<T>::Iteratore first, typename Vettore<T>::Iteratore second );
+        Vettore(typename Vettore<T>::Iteratore first, typename Vettore<T>::Iteratore second );
         Vettore(const Vettore& vec); //ok
 
         // Vettore OPERATOR overloading
@@ -198,7 +198,7 @@ Vettore<T>::Vettore(u_int n, T* t): info(new T[n]), size(n){
     }
 }
 
-/*
+
 template <class T>
 Vettore<T>::Vettore(typename Vettore<T>::Iteratore first, typename  Vettore<T>::Iteratore second){ 
     //non passati per riferimento costante perchè dobiamo fare ++ allinterno della funzione
@@ -206,24 +206,17 @@ Vettore<T>::Vettore(typename Vettore<T>::Iteratore first, typename  Vettore<T>::
         size=0;
         capacity=0;
         info=new T[second.index==first.index ? 1 : second.index-first.index];
-        cout << "primo if" << endl;
         if( first == second ){
-            cout << "seconod if if" << endl;
             push_back(*first);
-            cout << "pushback" << endl;
         }
         else{
-            cout << "prima di while" << endl;
             while(first!=second){
-                cout << *first << endl;
                 push_back(*first);
-                cout << "pushback" << endl;
                 first++;
             }
-            cout << "dopo while" << endl;
         }
     }
-}*/
+}
 
 template <class T> //ok
 Vettore<T>::Vettore(const Vettore& vec): size(vec.size){
